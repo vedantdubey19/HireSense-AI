@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bg font-sans;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #0a0a0a;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-extrabold text-white;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: theme('colors.surface');
+    border: 1px solid theme('colors.border');
+    border-radius: 8px;
+    padding: 24px;
+    transition: all 0.2s ease-out;
+  }
+  
+  .glass-card:hover {
+    background: theme('colors.surface-hover');
+    border-color: theme('colors.border');
+  }
+  
+  .shimmer-text {
+    background: linear-gradient(90deg, #ff4500 0%, #dc2626 50%, #ff4500 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .cta-btn {
+    background: transparent;
+    border: 1px solid theme('colors.border');
+    border-radius: 6px;
+    padding: 12px 24px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cta-btn:hover {
+    border-color: theme('colors.accent');
+    background: rgba(255, 69, 0, 0.05); /* very subtle orange tint */
+  }
+}
+
+/* Custom classes for the specific animated components */
+.scanning::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: theme('colors.accent');
+  box-shadow: 0 0 10px theme('colors.accent');
+  animation: scan 2.5s linear infinite;
+  opacity: 0.5; pointer-events: none; z-index: 10;
+}
