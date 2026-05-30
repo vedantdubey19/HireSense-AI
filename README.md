@@ -98,4 +98,4 @@ Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
 Vedant Dubey
 GitHub: https://github.com/vedantdubey19
-"Testing Pair ExtraordinaireTesting Pair Extraordinaire Achievement"
+"Testing Pair Extraordinaire Achievement"
