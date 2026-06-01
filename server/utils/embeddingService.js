@@ -2,9 +2,9 @@ const axios = require('axios');
 
 const NLP_SERVICE_URL = process.env.NLP_SERVICE_URL || 'http://nlp-service:8000';
 
-const getEmbedding = async (text) => {
+const getEmbedding = async (text, isQuery = false) => {
   try {
-    const response = await axios.post(`${NLP_SERVICE_URL}/embed`, { text });
+    const response = await axios.post(`${NLP_SERVICE_URL}/embed`, { text, is_query: isQuery });
     return response.data.embedding;
   } catch (error) {
     console.error('Error connecting to NLP service:', error.message);

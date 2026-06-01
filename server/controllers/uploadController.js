@@ -45,50 +45,45 @@ exports.uploadResumes = async (req, res) => {
     }
 
     const jobEmbedding = activeJob.embedding;
-    const processingPromises = [];
-
-    // Process each file
-    for (const file of files) {
+    const processingPromises = files.map(async (file) => {
       const originalName = file.originalname;
       const baseName = path.parse(originalName).name;
 
-      processingPromises.push(new Promise(async (resolve) => {
-        try {
-          // 1. Text Extraction
-          const text = await extractText(file);
-          if (!text || text.trim().length === 0) {
-            console.warn(`Could not extract text from ${originalName}`);
-            return resolve(null);
-          }
-
-          // 2. Embedding
-          const resumeEmbedding = await getEmbedding(text);
-
-          // 3. Similarity Score (Cosine)
-          const scoreRaw = await getSimilarity(resumeEmbedding, jobEmbedding);
-          // Scale to 0-100 and format
-          const matchScore = Math.max(0, Math.min(100, Math.round(scoreRaw * 100)));
-          
-          const skills = extractSkillsMock(text);
-
-          // 4. Save to DB
-          const candidate = new Candidate({
-            name: baseName.replace(/[-_]/g, ' '), // rudimentary name parsing
-            role: 'Candidate', // Defaulting role
-            resumeText: text.substring(0, 500) + '...', // Saving snippet
-            skills: skills.length > 0 ? skills : ['Generalist'],
-            matchScore,
-            embedding: resumeEmbedding
-          });
-
-          await candidate.save();
-          resolve(candidate);
-        } catch (err) {
-          console.error(`Error processing file ${originalName}:`, err);
-          resolve(null);
+      try {
+        // 1. Text Extraction
+        const text = await extractText(file);
+        if (!text || text.trim().length === 0) {
+          console.warn(`Could not extract text from ${originalName}`);
+          return null;
         }
-      }));
-    }
+
+        // 2. Embedding
+        const resumeEmbedding = await getEmbedding(text);
+
+        // 3. Similarity Score (Cosine)
+        const scoreRaw = await getSimilarity(resumeEmbedding, jobEmbedding);
+        // Scale to 0-100 and format
+        const matchScore = Math.max(0, Math.min(100, Math.round(scoreRaw * 100)));
+        
+        const skills = extractSkillsMock(text);
+
+        // 4. Save to DB
+        const candidate = new Candidate({
+          name: baseName.replace(/[-_]/g, ' '), // rudimentary name parsing
+          role: 'Candidate', // Defaulting role
+          resumeText: text.substring(0, 500) + '...', // Saving snippet
+          skills: skills.length > 0 ? skills : ['Generalist'],
+          matchScore,
+          embedding: resumeEmbedding
+        });
+
+        await candidate.save();
+        return candidate;
+      } catch (err) {
+        console.error(`Error processing file ${originalName}:`, err);
+        return null;
+      }
+    });
 
     await Promise.all(processingPromises);
 

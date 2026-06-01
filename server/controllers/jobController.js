@@ -11,8 +11,8 @@ exports.setJobDescription = async (req, res) => {
       return res.status(400).json({ error: 'Job description is required' });
     }
 
-    // Get embedding for job description
-    const embedding = await getEmbedding(description);
+    // Get embedding for job description (pass true for query mode)
+    const embedding = await getEmbedding(description, true);
 
     // Deactivate previous jobs
     await Job.updateMany({}, { isActive: false });

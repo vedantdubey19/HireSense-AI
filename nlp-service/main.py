@@ -7,6 +7,7 @@ app = FastAPI(title="HireSense NLP Service")
 
 class TextRequest(BaseModel):
     text: str
+    is_query: bool = False
 
 class SimilarityRequest(BaseModel):
     vec1: List[float]
@@ -18,7 +19,7 @@ def health_check():
 
 @app.post("/embed")
 def embed_text(req: TextRequest):
-    embedding = generate_embedding(req.text)
+    embedding = generate_embedding(req.text, req.is_query)
     return {"embedding": embedding}
 
 @app.post("/similarity")
