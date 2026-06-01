@@ -1,6 +1,6 @@
 # 🧠 HireSense AI
 ![HireSense AI Banner](screenshots/banner.png)
-**Created by Vedant Dubey**
+**Author:** Vedant Dubey
 
 > **Semantic Recruitment Engine V2.4**  
 > An advanced, AI-powered applicant tracking system (ATS) that utilizes semantic vector embeddings to instantly screen, rank, and match candidate resumes against job descriptions.
@@ -17,11 +17,7 @@
 
 ## 📸 Snapshots
 
-### 1. Dashboard & Pipeline Stepper
-![Dashboard Overview](screenshots/dashboard.png)
-*Track the live progress of candidate processing through the engine.*
-
-### 2. Job Description Configuration
+### 1. Job Description Configuration
 ![Job Config](screenshots/job_config.png)
 *Setting the target semantic space and uploading candidate resumes.*
 
