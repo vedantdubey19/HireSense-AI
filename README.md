@@ -5,6 +5,8 @@
 > **Semantic Recruitment Engine V2.4**  
 > An advanced, AI-powered applicant tracking system (ATS) that utilizes semantic vector embeddings to instantly screen, rank, and match candidate resumes against job descriptions.
 
+🔗 **[Live Demo](https://hire-sense-ai-beta.vercel.app/)**
+
 ## ✨ Features
 
 - 📄 **Automated PDF Parsing:** Instantly extracts raw text and key skills from uploaded candidate resumes.
