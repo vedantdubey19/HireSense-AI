@@ -1,4 +1,5 @@
 # 🧠 HireSense AI
+![HireSense AI Banner](screenshots/banner.png)
 **Created by Vedant Dubey**
 
 > **Semantic Recruitment Engine V2.4**  
@@ -20,9 +21,9 @@
 ![Dashboard Overview](screenshots/dashboard.png)
 *Track the live progress of candidate processing through the engine.*
 
-### 2. Candidate Deep-Dive Modal
-![Candidate Modal](screenshots/candidate_modal.png)
-*Detailed breakdown of a candidate's ATS score, matched skills, and resume snippets.*
+### 2. Job Description Configuration
+![Job Config](screenshots/job_config.png)
+*Setting the target semantic space and uploading candidate resumes.*
 
 ---
 

@@ -5,7 +5,8 @@ import PipelineStepper from './components/PipelineStepper';
 import CandidateGrid from './components/CandidateGrid';
 import UploadZone from './components/UploadZone';
 import JobDescriptionInput from './components/JobDescriptionInput';
-import TechStack from './components/TechStack';
+import Toast from './components/Toast';
+import ConfirmModal from './components/ConfirmModal';
 import { getCandidates, uploadResumes, setJobDescription } from './api/hiresense';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -20,6 +21,15 @@ function App() {
   const [activeStepOverride, setActiveStepOverride] = useState(null);
   
   const [showUploadPanel, setShowUploadPanel] = useState(false);
+
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('info');
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
+
+  const showToast = (message, type = 'info') => {
+    setToastMessage(message);
+    setToastType(type);
+  };
 
   useEffect(() => {
     fetchCandidates();
@@ -42,9 +52,9 @@ function App() {
     setIsSettingJob(true);
     try {
       await setJobDescription(title, description);
-      alert('Job Description set successfully!');
+      showToast('Job Description set successfully!', 'success');
     } catch (err) {
-      alert('Failed to set job description');
+      showToast('Failed to set job description', 'error');
       console.error(err);
     } finally {
       setIsSettingJob(false);
@@ -72,7 +82,7 @@ function App() {
     } catch (err) {
       clearTimeout(t1);
       clearTimeout(t2);
-      alert('Upload failed. Please ensure backend and NLP services are running and Job Description is set first.');
+      showToast('Upload failed. Please ensure backend and NLP services are running and Job Description is set first.', 'error');
       console.error(err);
       setActiveStepOverride(null);
     } finally {
@@ -80,7 +90,6 @@ function App() {
     }
   };
 
-  const techStackRef = useRef(null);
   const pipelineRef = useRef(null);
   const embeddingsRef = useRef(null);
   const dashboardRef = useRef(null);
@@ -91,22 +100,33 @@ function App() {
     }
   };
 
-  const handleResetRole = async () => {
-    if (confirm("Are you sure you want to start a new role? This will clear all current candidates.")) {
-      try {
-         // Assuming you wanted to add clearCandidates to hiresense.js, fallback to local state clear
-         setCandidates([]);
-         setActiveStepOverride(null);
-         setShowUploadPanel(true);
-         scrollToSection(dashboardRef);
-      } catch (err) {
-         console.error(err);
-      }
+  const handleResetRole = () => {
+    setShowConfirmReset(true);
+  };
+
+  const confirmResetRole = async () => {
+    setShowConfirmReset(false);
+    try {
+       setCandidates([]);
+       setActiveStepOverride(null);
+       setShowUploadPanel(true);
+       scrollToSection(dashboardRef);
+       showToast('Started a new role successfully.', 'success');
+    } catch (err) {
+       console.error(err);
     }
   };
 
   return (
     <div className="relative min-h-screen bg-bg text-white font-sans">
+      <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage('')} />
+      <ConfirmModal 
+        isOpen={showConfirmReset} 
+        title="Start New Role?" 
+        message="Are you sure you want to start a new role? This will clear all current candidates from the dashboard."
+        onConfirm={confirmResetRole}
+        onCancel={() => setShowConfirmReset(false)}
+      />
       <div className="max-w-[1240px] mx-auto px-6 py-8 box-border" ref={dashboardRef}>
         
         <Header 
@@ -115,7 +135,6 @@ function App() {
             if (section === 'dashboard') scrollToSection(dashboardRef);
             if (section === 'pipeline') scrollToSection(pipelineRef);
             if (section === 'embeddings') scrollToSection(embeddingsRef);
-            if (section === 'analytics') scrollToSection(techStackRef);
           }}
           onNewRole={handleResetRole}
         />
@@ -125,7 +144,6 @@ function App() {
             setShowUploadPanel(true);
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
           }} 
-          onViewArchitecture={() => scrollToSection(techStackRef)}
           candidates={candidates} 
         />
 
@@ -155,10 +173,6 @@ function App() {
 
         <div ref={embeddingsRef}>
           <CandidateGrid candidates={candidates} loading={loadingInitial} />
-        </div>
-
-        <div ref={techStackRef}>
-          <TechStack />
         </div>
 
       </div>

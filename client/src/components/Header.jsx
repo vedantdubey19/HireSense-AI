@@ -21,8 +21,6 @@ const Header = ({ isActive, onScrollTo, onNewRole }) => {
       <nav className="flex gap-8 text-sm font-sans text-white/60">
         <span onClick={() => onScrollTo && onScrollTo('dashboard')} className="text-white border-b-2 border-accent pb-1 cursor-pointer transition-colors">Dashboard</span>
         <span onClick={() => onScrollTo && onScrollTo('pipeline')} className="cursor-pointer hover:text-white transition-colors">Pipeline</span>
-        <span onClick={() => onScrollTo && onScrollTo('embeddings')} className="cursor-pointer hover:text-white transition-colors">Embeddings</span>
-        <span onClick={() => onScrollTo && onScrollTo('analytics')} className="cursor-pointer hover:text-white transition-colors">Analytics</span>
       </nav>
 
       <div className="flex gap-4 items-center">

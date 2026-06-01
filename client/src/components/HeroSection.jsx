@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-export const useCounterAnimation = (targetValue, duration = 1500) => {
+const useCounterAnimation = (targetValue, duration = 1500) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -28,11 +28,11 @@ export const useCounterAnimation = (targetValue, duration = 1500) => {
   return count;
 };
 
-const HeroSection = ({ onRunPipeline, onViewArchitecture, candidates = [] }) => {
-  const total = candidates.length > 0 ? candidates.length : 5247;
+const HeroSection = ({ onRunPipeline, candidates = [] }) => {
+  const total = candidates.length;
   const avgScore = candidates.length > 0 
     ? Math.round(candidates.reduce((acc, curr) => acc + curr.matchScore, 0) / candidates.length) 
-    : 94;
+    : 0;
 
   const animatedTotal = useCounterAnimation(total);
   const animatedAvg = useCounterAnimation(avgScore);
@@ -78,15 +78,6 @@ const HeroSection = ({ onRunPipeline, onViewArchitecture, candidates = [] }) => 
             className="flex items-center gap-2 border border-white/20 bg-transparent text-white rounded-md px-5 py-3 font-sans font-bold text-sm transition-colors cursor-pointer"
           >
             <span className="text-lg leading-none">▶</span> Run Screening
-          </motion.button>
-          
-          <motion.button 
-            onClick={onViewArchitecture}
-            whileHover={{ scale: 1.02, borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.05)' }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center justify-center border border-white/20 bg-transparent text-white rounded-md px-5 py-3 font-sans font-bold text-sm transition-colors cursor-pointer"
-          >
-            View Architecture
           </motion.button>
         </div>
       </div>

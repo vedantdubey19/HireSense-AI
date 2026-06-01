@@ -10,7 +10,7 @@ const PipelineStepper = ({ activeStepOverride = null, candidates = [] }) => {
     { title: 'Rank' }
   ];
 
-  const shortlistedCount = candidates.length > 0 ? candidates.length : 312;
+  const shortlistedCount = candidates.length;
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isReprojecting, setIsReprojecting] = useState(false);
@@ -20,9 +20,10 @@ const PipelineStepper = ({ activeStepOverride = null, candidates = [] }) => {
     setTimeout(() => setIsReprojecting(false), 2000);
   };
 
+  const displayedStep = activeStepOverride !== null ? activeStepOverride : currentStep;
+
   useEffect(() => {
     if (activeStepOverride !== null) {
-      setCurrentStep(activeStepOverride);
       return;
     }
     const interval = setInterval(() => {
@@ -51,14 +52,14 @@ const PipelineStepper = ({ activeStepOverride = null, candidates = [] }) => {
           <motion.div 
             className="absolute left-8 h-0.5 bg-accent top-6 -z-10"
             initial={{ width: '0%' }}
-            animate={{ width: `${(currentStep / (stepsData.length - 1)) * 100}%` }}
+            animate={{ width: `${(displayedStep / (stepsData.length - 1)) * 100}%` }}
             transition={{ duration: 0.5 }}
             style={{ maxWidth: 'calc(100% - 4rem)' }}
           ></motion.div>
 
           {stepsData.map((step, idx) => {
-            const isPast = idx < currentStep;
-            const isCurrent = idx === currentStep;
+            const isPast = idx < displayedStep;
+            const isCurrent = idx === displayedStep;
             
             let nodeClass = "w-12 h-12 rounded-full flex justify-center items-center font-sans font-bold text-lg border-2 transition-all duration-300 bg-bg ";
             if (isPast) nodeClass += "bg-accent border-accent text-bg";
@@ -81,10 +82,10 @@ const PipelineStepper = ({ activeStepOverride = null, candidates = [] }) => {
         {/* Stats row inside the card */}
         <div className="grid grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-border border border-border rounded-xl bg-bg/50 overflow-hidden">
           {[
-            { label: 'TOTAL', val: '5,247' },
-            { label: 'PARSED', val: '4,891' },
-            { label: 'EMBEDDED', val: '4,891' },
-            { label: 'MATCHED', val: '1,043' },
+            { label: 'TOTAL', val: candidates.length },
+            { label: 'PARSED', val: candidates.length },
+            { label: 'EMBEDDED', val: candidates.length },
+            { label: 'MATCHED', val: candidates.length },
             { label: 'SHORTLISTED', val: shortlistedCount }
           ].map((stat, idx) => (
             <div key={idx} className={`p-5 text-center ${idx === 4 ? 'col-span-2 lg:col-span-1' : ''}`}>
@@ -95,54 +96,7 @@ const PipelineStepper = ({ activeStepOverride = null, candidates = [] }) => {
         </div>
       </section>
 
-      {/* Semantic Embedding Space Placeholder */}
-      <section className="border border-border bg-surface/30 rounded-2xl p-8 relative overflow-hidden shadow-lg">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-1 h-4 bg-accent2"></div>
-            <span className="font-heading font-bold text-sm tracking-[2px] text-white">SEMANTIC EMBEDDING SPACE</span>
-          </div>
-          <span 
-            onClick={handleReproject}
-            className={`text-white/40 font-sans font-bold text-[10px] px-3 py-1 border border-border rounded tracking-widest cursor-pointer hover:bg-white/5 transition-colors flex items-center gap-1 ${isReprojecting ? 'opacity-50 pointer-events-none' : ''}`}
-          >
-            <span className={isReprojecting ? "animate-spin" : ""}>↻</span> {isReprojecting ? 'Reprojecting...' : 'Reproject'}
-          </span>
-        </div>
-        
-        <div className="font-sans text-xs text-white/50 mb-6">
-          t-SNE projection • 768-dim vectors • cosine similarity
-        </div>
-        
-        <div className="h-[280px] border border-border bg-bg/50 rounded-xl relative overflow-hidden flex items-center justify-center group">
-          {/* Subtle concentric circles for radar/projection effect */}
-          <div className={`absolute border border-border/50 rounded-full w-[100px] h-[100px] ${isReprojecting ? 'animate-pulse' : ''}`}></div>
-          <div className={`absolute border border-border/50 rounded-full w-[200px] h-[200px] ${isReprojecting ? 'animate-pulse delay-75' : ''}`}></div>
-          <div className={`absolute border border-border/50 rounded-full w-[350px] h-[350px] ${isReprojecting ? 'animate-pulse delay-150' : ''}`}></div>
-          
-          <div className="absolute w-2 h-2 rounded-full bg-accent top-1/2 left-[40%]"></div>
-          <div className="absolute w-2 h-2 rounded-full bg-accent top-[45%] left-[55%]"></div>
-          <div className="absolute w-2 h-2 rounded-full bg-accent top-[60%] left-[45%]"></div>
-          
-          <div className="absolute w-2 h-2 rounded-full bg-good top-[30%] left-[30%]"></div>
-          <div className="absolute w-2 h-2 rounded-full bg-good top-[40%] left-[65%]"></div>
-          
-          <div className="absolute w-1.5 h-1.5 rounded-full bg-border top-[20%] left-[70%]"></div>
-          <div className="absolute w-1.5 h-1.5 rounded-full bg-border top-[75%] left-[35%]"></div>
-          
-          <div className="absolute w-3 h-3 bg-strong top-[48%] left-[48%] z-10 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-bg/50 to-transparent pointer-events-none"></div>
-          <span className="text-white/10 font-sans italic absolute inset-0 flex items-center justify-center pointer-events-none select-none">[ Visualization Interface ]</span>
-        </div>
-        
-        <div className="flex flex-wrap gap-x-6 gap-y-3 mt-5 font-sans text-[10px] font-bold text-white/60 uppercase tracking-wider">
-          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-accent"></div>Strong match (&gt;85)</div>
-          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-good"></div>Good match (70-85)</div>
-          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-white/20"></div>Ranked</div>
-          <div className="flex items-center gap-2"><div className="w-2 h-2 bg-strong"></div>Job centroid</div>
-        </div>
-      </section>
+
     </div>
   );
 };

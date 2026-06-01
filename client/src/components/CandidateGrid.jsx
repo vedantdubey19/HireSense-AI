@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import CandidateModal from './CandidateModal';
 
 const CandidateGrid = ({ candidates, loading }) => {
   const [filter, setFilter] = useState('All');
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
 
   const getMatchLevel = (score) => {
     if (score >= 85) return { label: 'STRONG', color: 'text-strong bg-strong/10 border-strong/20', bar: 'bg-accent' };
@@ -125,12 +127,12 @@ const CandidateGrid = ({ candidates, loading }) => {
 
                   {/* Exp (Mocked or real) */}
                   <div className="col-span-1 font-sans text-xs text-white/70 hidden md:block">
-                    {candidate.experience || Math.floor(Math.random() * 6 + 2) + ' yrs'}
+                    {candidate.experience || (((candidate.name ? candidate.name.length : 5) % 6) + 2) + ' yrs'}
                   </div>
 
                   {/* Action */}
                   <div className="col-span-1 flex justify-center md:justify-end w-full md:w-auto mt-4 md:mt-0">
-                    <button onClick={() => alert(`Reviewing candidate: ${candidate.name}`)} className="w-full md:w-auto px-4 py-2 border border-border rounded text-[11px] font-sans font-bold text-white/80 hover:bg-white hover:text-black transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] group-hover:border-white/40 cursor-pointer">
+                    <button onClick={() => setSelectedCandidate(candidate)} className="w-full md:w-auto px-4 py-2 border border-border rounded text-[11px] font-sans font-bold text-white/80 hover:bg-white hover:text-black transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] group-hover:border-white/40 cursor-pointer">
                       Review →
                     </button>
                   </div>
@@ -144,6 +146,11 @@ const CandidateGrid = ({ candidates, loading }) => {
           )}
         </div>
       </div>
+      <CandidateModal 
+        candidate={selectedCandidate} 
+        isOpen={!!selectedCandidate} 
+        onClose={() => setSelectedCandidate(null)} 
+      />
     </motion.section>
   );
 };
