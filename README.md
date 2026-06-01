@@ -1,101 +1,104 @@
-# 🚀 HireSense AI  
+# 🧠 HireSense AI
+**Created by Vedant Dubey**
 
-An AI-powered recruitment engine that automates resume screening using NLP and embedding-based semantic matching to intelligently rank candidates.
+> **Semantic Recruitment Engine V2.4**  
+> An advanced, AI-powered applicant tracking system (ATS) that utilizes semantic vector embeddings to instantly screen, rank, and match candidate resumes against job descriptions.
 
----
+## ✨ Features
 
-## 📌 Overview  
-HireSense AI streamlines the hiring process by replacing traditional keyword-based filtering with context-aware candidate matching. It processes large volumes of resumes and ranks candidates based on their relevance to job descriptions, reducing manual effort significantly.
-
----
-
-## ⚙️ Features  
-- 🔍 Semantic Job Matching using embeddings  
-- 📄 Automated Resume Screening for 5,000+ candidates  
-- 📊 Candidate Ranking System based on relevance score  
-- ⚡ ~70% Reduction in Manual Shortlisting Time  
-- 🌐 Full-Stack MERN Application  
-- 🐳 Dockerized for easy deployment  
+- 📄 **Automated PDF Parsing:** Instantly extracts raw text and key skills from uploaded candidate resumes.
+- 🧬 **Semantic Vector Matching:** Uses powerful NLP Transformers (`all-MiniLM-L6-v2` via PyTorch) to convert resumes and job descriptions into high-dimensional embeddings, ranking candidates by true semantic cosine-similarity rather than basic keyword matching.
+- ⚡ **Real-Time Pipeline:** Fast API architecture that streams resumes through parsing, embedding, and matching stages in seconds.
+- 🎨 **Modern Glassmorphism UI:** Built with React and Framer Motion, featuring smooth micro-animations, custom Toast notifications, and deep-dive candidate review modals.
+- 📊 **Dynamic Dashboard:** Instantly visualize your recruitment pipeline, from total candidates parsed to the top 1% shortlisted.
 
 ---
 
-## 🛠️ Tech Stack  
+## 📸 Snapshots
 
-**Frontend:** React.js  
-**Backend:** Node.js, Express.js  
-**Database:** MongoDB  
-**AI/ML:** NLP, Embeddings (semantic similarity)  
-**DevOps:** Docker  
+### 1. Dashboard & Pipeline Stepper
+![Dashboard Overview](screenshots/dashboard.png)
+*Track the live progress of candidate processing through the engine.*
 
----
-
-## 🧠 How It Works  
-
-1. Upload resumes and job descriptions  
-2. Preprocess text using NLP techniques  
-3. Convert text into embeddings  
-4. Compute similarity between candidates and job roles  
-5. Rank candidates based on matching score  
+### 2. Candidate Deep-Dive Modal
+![Candidate Modal](screenshots/candidate_modal.png)
+*Detailed breakdown of a candidate's ATS score, matched skills, and resume snippets.*
 
 ---
 
-## 📂 Project Structure  HireSense-AI/
-│── client/        # React frontend
-│── server/        # Node.js backend
-│── models/        # Database schemas
-│── routes/        # API routes
-│── utils/         # NLP & embedding logic
-│── docker/        # Docker configuration
-│── README.md
+## 🏗️ Architecture
 
+```mermaid
+graph TD
+    UI[React / Vite Frontend] -->|Upload PDFs| API[Node.js Express Server]
+    API -->|Raw Text| NLP[Python Fastapi / NLP Service]
+    NLP -->|PyTorch Embeddings| Model[(Sentence Transformers)]
+    Model --> NLP
+    NLP -->|Cosine Similarity Scores| API
+    API -->|Store Results| DB[(MongoDB)]
+    DB --> API
+    API -->|Ranked Candidates| UI
+```
 
 ---
 
-## 🚀 Installation & Setup  
+## 💻 Technology Stack
 
-### 1. Clone the repository  
+**Frontend:**
+- React (Vite)
+- TailwindCSS
+- Framer Motion
+- Lucide Icons
+
+**Backend API:**
+- Node.js & Express
+- MongoDB & Mongoose
+- Multer (In-memory file processing)
+
+**AI / NLP Engine:**
+- Python 3.11+
+- FastAPI
+- PyTorch
+- HuggingFace SentenceTransformers (`all-MiniLM-L6-v2`)
+- PyMuPDF (fitz)
+
+---
+
+## 🚀 Quick Setup Guide
+
+### Prerequisites
+- Node.js (v18+)
+- Python (3.11+)
+- MongoDB (Running locally on default port `27017`)
+
+### 1. Start the NLP Service (AI Engine)
 ```bash
-git clone https://github.com/vedantdubey19/HireSense-AI.git
-cd HireSense-AI
+cd nlp-service
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
+```
+*Runs on `http://localhost:8000`*
 
-2. Install dependencies
+### 2. Start the Backend API
+```bash
+cd server
 npm install
-cd client && npm install
-
-3. Setup environment variables
-
-Create a .env file in the root directory:
-
-MONGO_URI=your_mongodb_connection
-PORT=5000
-
-
-4. Run the application
-
+# Ensure MongoDB is running!
 npm run dev
+```
+*Runs on `http://localhost:5555`*
 
+### 3. Start the Frontend Client
+```bash
+cd client
+npm install
+npm run dev
+```
+*Runs on `http://localhost:5173`*
 
-🐳 Run with Docker
-docker build -t hiresense-ai .
-docker run -p 5000:5000 hiresense-ai
+---
 
-🌟 Future Improvements
-	•	AI-based interview assistant
-	•	Advanced analytics dashboard
-	•	Bias detection in hiring
-	•	Integration with ATS systems
-
-⸻
-
-🤝 Contributing
-
-Contributions are welcome! Feel free to fork the repo and submit a pull request.
-
-⸻
-
-
-👨‍💻 Author
-
-Vedant Dubey
-GitHub: https://github.com/vedantdubey19
-"Testing Pair Extraordinaire Achievement"
+## 🤝 Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
